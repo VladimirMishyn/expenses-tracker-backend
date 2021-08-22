@@ -21,7 +21,6 @@ userRouter.post(`${USERS_BASE_URL}`, async (req: Request, res: Response) => {
 /** Login user */
 userRouter.post(`${USERS_BASE_URL}/login`, async (req: Request, res: Response) => {
   try {
-    console.log('logging in');
     const user = await UserModel.findUserByCredentials(req.body.email, req.body.password);
     const token = await user.generateAuthToken();
     res.send({ user, token });
@@ -47,7 +46,11 @@ userRouter.get(`${USERS_BASE_URL}/me`, auth, (req: Request, res: Response) => {
 });
 
 /** Update my user info */
-userRouter.patch(`${USERS_BASE_URL}/me`, auth, (req: Request, res: Response) => {});
+userRouter.patch(`${USERS_BASE_URL}/me`, auth, (req: Request, res: Response) => {
+  // TODO: Provide implementation
+});
 
 /** Delete my user */
-userRouter.delete(`${USERS_BASE_URL}/me`, auth, (req: Request, res: Response) => {});
+userRouter.delete(`${USERS_BASE_URL}/me`, auth, (req: Request, res: Response) => {
+  // TODO: Provide implementation
+});

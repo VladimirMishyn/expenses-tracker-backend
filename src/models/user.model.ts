@@ -11,43 +11,54 @@ interface UserModelInterface extends Model<UserInterface> {
   findUserByCredentials(email: string, password: string): Promise<UserInterface>;
 }
 
-const userSchema = new Schema<UserDocumentInterface>({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-    trim: true,
-    lowercase: true,
-    validate(value) {
-      if (!validator.isEmail(value)) {
-        throw new Error('Email is invalid');
-      }
+const userSchema = new Schema<UserDocumentInterface>(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
     },
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 7,
-    trim: true,
-    // validate(value) {
-    //     if (value.toLowerCase().imclu) {
-    //         throw new Error('Provide reasonable password please:)')
-    //     }
-    // }
-  },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true,
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+      trim: true,
+      lowercase: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error('Email is invalid');
+        }
       },
     },
-  ],
+    password: {
+      type: String,
+      required: true,
+      minlength: 7,
+      trim: true,
+      // validate(value) {
+      //     if (value.toLowerCase().imclu) {
+      //         throw new Error('Provide reasonable password please:)')
+      //     }
+      // }
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
+
+userSchema.virtual('expenses', {
+  ref: 'Expense',
+  localField: '_id',
+  foreignField: 'owner',
 });
 
 userSchema.methods.toJSON = function () {
