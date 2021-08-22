@@ -8,7 +8,7 @@ export interface UserInterface extends UserDocumentInterface {
   generateAuthToken(): Promise<string>;
 }
 interface UserModelInterface extends Model<UserInterface> {
-  findUserByCredentials(email: string, password: string): Promise<UserDocumentInterface>;
+  findUserByCredentials(email: string, password: string): Promise<UserInterface>;
 }
 
 const userSchema = new Schema<UserDocumentInterface>({

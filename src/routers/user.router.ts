@@ -14,19 +14,36 @@ userRouter.post(`${USERS_BASE_URL}`, async (req: Request, res: Response) => {
     const token = await user.generateAuthToken();
     res.status(201).send({ user, token });
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).send({ error: e.message });
   }
 });
 
 /** Login user */
-userRouter.post(`${USERS_BASE_URL}/login`, auth, (req: Request, res: Response) => {});
+userRouter.post(`${USERS_BASE_URL}/login`, async (req: Request, res: Response) => {
+  try {
+    console.log('logging in');
+    const user = await UserModel.findUserByCredentials(req.body.email, req.body.password);
+    const token = await user.generateAuthToken();
+    res.send({ user, token });
+  } catch (e) {
+    res.status(400).send({ error: e.message });
+  }
+});
 
 /** Logout user */
-userRouter.post(`${USERS_BASE_URL}/logout`, auth, (req: Request, res: Response) => {});
+userRouter.post(`${USERS_BASE_URL}/logout`, auth, async (req: Request, res: Response) => {
+  try {
+    res.locals.user.tokens = res.locals.user.tokens.filter((token) => token.token !== res.locals.token);
+    await res.locals.user.save();
+    res.send();
+  } catch (e) {
+    res.status(500).send({ error: e.message });
+  }
+});
 
 /** Access my user */
 userRouter.get(`${USERS_BASE_URL}/me`, auth, (req: Request, res: Response) => {
-  console.log('aaaa');
+  res.send(res.locals.user);
 });
 
 /** Update my user info */
