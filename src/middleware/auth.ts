@@ -1,16 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
+import { UserModel } from '../models/user.model';
+import * as jwt from 'jsonwebtoken';
 
-export function auth(req: Request, res: Response, next: NextFunction) {
-  const authHeader = req.headers.authorization;
-  if (authHeader) {
+export async function auth(req: Request, res: Response, next: NextFunction) {
+  try {
     const token = req.header('Authorization').replace('Bearer ', '');
-    try {
-      // Logic here
-      next();
-    } catch (e) {
-      res.sendStatus(403).send({ error: e });
-    }
-  } else {
-    res.sendStatus(401).send({ error: 'Authentication fail' });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET) as { _id: string };
+    const user = await UserModel.findOne({ _id: decoded._id, 'tokens.token': token });
+    if (!user) throw new Error();
+    res.locals.token = token;
+    res.locals.user = user;
+    next();
+  } catch (e) {
+    res.status(401).send({ error: 'Please authenticate.' });
   }
 }

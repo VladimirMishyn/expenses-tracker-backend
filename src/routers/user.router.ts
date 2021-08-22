@@ -1,20 +1,33 @@
 import { Request, Response, Router } from 'express';
-import { checkAuth } from '../auth/check-auth';
+import { auth } from '../middleware/auth';
+import { UserModel } from '../models/user.model';
 
-const router = Router();
+export const userRouter = Router();
 const USERS_BASE_URL = '/users';
 
 /** Create user */
-router.post(`${USERS_BASE_URL}`, (req: Request, res: Response) => {});
+userRouter.post(`${USERS_BASE_URL}`, async (req: Request, res: Response) => {
+  const user = new UserModel(req.body);
+  try {
+    await user.save();
+    const token = await user.generateAuthToken();
+    res.status(201).send({ user, token });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
 
 /** Login user */
-router.post(`${USERS_BASE_URL}/login`, checkAuth, (req: Request, res: Response) => {});
+userRouter.post(`${USERS_BASE_URL}/login`, auth, (req: Request, res: Response) => {});
+
+/** Logout user */
+userRouter.post(`${USERS_BASE_URL}/logout`, auth, (req: Request, res: Response) => {});
 
 /** Access my user */
-router.get(`${USERS_BASE_URL}/me`, checkAuth, (req: Request, res: Response) => {});
+userRouter.get(`${USERS_BASE_URL}/me`, auth, (req: Request, res: Response) => {});
 
 /** Update my user info */
-router.patch(`${USERS_BASE_URL}/me`, checkAuth, (req: Request, res: Response) => {});
+userRouter.patch(`${USERS_BASE_URL}/me`, auth, (req: Request, res: Response) => {});
 
 /** Delete my user */
-router.delete(`${USERS_BASE_URL}/me`, checkAuth, (req: Request, res: Response) => {});
+userRouter.delete(`${USERS_BASE_URL}/me`, auth, (req: Request, res: Response) => {});

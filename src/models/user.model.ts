@@ -1,15 +1,17 @@
 import { Model, Schema, model } from 'mongoose';
-import isEmail from 'validator/es/lib/isEmail';
-import { UserInterface } from '../_entity-models/user.interface';
+import validator from 'validator';
+import { UserDocumentInterface } from '../_entity-models/user-document.interface';
 import * as jwt from 'jsonwebtoken';
-import { JWT } from '../_configs/jwt.enum';
 const bcrypt = require('bcryptjs');
 
+export interface UserInterface extends UserDocumentInterface {
+  generateAuthToken(): Promise<string>;
+}
 interface UserModelInterface extends Model<UserInterface> {
-  findUserByCredentials(): Promise<UserInterface>;
+  findUserByCredentials(email: string, password: string): Promise<UserDocumentInterface>;
 }
 
-const userSchema = new Schema<UserInterface>({
+const userSchema = new Schema<UserDocumentInterface>({
   name: {
     type: String,
     required: true,
@@ -22,7 +24,7 @@ const userSchema = new Schema<UserInterface>({
     trim: true,
     lowercase: true,
     validate(value) {
-      if (!isEmail(value)) {
+      if (!validator.isEmail(value)) {
         throw new Error('Email is invalid');
       }
     },
@@ -47,7 +49,8 @@ const userSchema = new Schema<UserInterface>({
     },
   ],
 });
-const UserModel = model<UserInterface, UserModelInterface>('User', userSchema);
+
+const UserModel: UserModelInterface = model<UserInterface, UserModelInterface>('User', userSchema);
 
 userSchema.methods.toJSON = function () {
   const userObject = this.toObject();
@@ -59,7 +62,7 @@ userSchema.methods.toJSON = function () {
 
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
-  const token = jwt.sign({ _id: user._id.toString() }, JWT.SEED);
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
   user.tokens = [...user.tokens, { token }];
   await user.save();
   return token;
@@ -69,7 +72,7 @@ userSchema.statics.findUserByCredentials = async (email: string, password: strin
   const user = await UserModel.findOne({ email });
   if (!user) throw new Error('Such user does not exist');
   const isPasswordCorrect = await bcrypt.compare(password, user.password);
-  if (!isPasswordCorrect) throw Error('Wring password');
+  if (!isPasswordCorrect) throw Error('Wrong password');
   return user;
 };
 
