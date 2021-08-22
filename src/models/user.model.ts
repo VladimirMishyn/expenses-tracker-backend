@@ -50,8 +50,6 @@ const userSchema = new Schema<UserDocumentInterface>({
   ],
 });
 
-const UserModel: UserModelInterface = model<UserInterface, UserModelInterface>('User', userSchema);
-
 userSchema.methods.toJSON = function () {
   const userObject = this.toObject();
   delete userObject.password;
@@ -84,4 +82,4 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-export { UserModel };
+export const UserModel: UserModelInterface = model<UserInterface, UserModelInterface>('User', userSchema);

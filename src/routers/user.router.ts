@@ -7,6 +7,7 @@ const USERS_BASE_URL = '/users';
 
 /** Create user */
 userRouter.post(`${USERS_BASE_URL}`, async (req: Request, res: Response) => {
+  console.log('body', req.body);
   const user = new UserModel(req.body);
   try {
     await user.save();
@@ -24,7 +25,9 @@ userRouter.post(`${USERS_BASE_URL}/login`, auth, (req: Request, res: Response) =
 userRouter.post(`${USERS_BASE_URL}/logout`, auth, (req: Request, res: Response) => {});
 
 /** Access my user */
-userRouter.get(`${USERS_BASE_URL}/me`, auth, (req: Request, res: Response) => {});
+userRouter.get(`${USERS_BASE_URL}/me`, auth, (req: Request, res: Response) => {
+  console.log('aaaa');
+});
 
 /** Update my user info */
 userRouter.patch(`${USERS_BASE_URL}/me`, auth, (req: Request, res: Response) => {});
