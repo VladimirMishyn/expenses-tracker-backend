@@ -3,7 +3,7 @@ import { auth } from '../middleware/auth';
 import { ExpenseModel } from '../models/expense.model';
 
 export const expenseRouter = Router();
-const EXPENSES_BASE_URL = '/expenses';
+const EXPENSES_BASE_URL = '/api/expenses';
 
 /** Create expense */
 expenseRouter.post(`${EXPENSES_BASE_URL}`, auth, async (req: Request, res: Response) => {

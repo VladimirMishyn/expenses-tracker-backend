@@ -3,7 +3,7 @@ import { auth } from '../middleware/auth';
 import { UserModel } from '../models/user.model';
 
 export const userRouter = Router();
-const USERS_BASE_URL = '/users';
+const USERS_BASE_URL = '/api/users';
 
 /** Create user */
 userRouter.post(`${USERS_BASE_URL}`, async (req: Request, res: Response) => {

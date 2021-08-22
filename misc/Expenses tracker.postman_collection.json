@@ -32,7 +32,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"name\":\"Vova\",\r\n    \"email\":\"em@gmail.com\",\r\n    \"password\":\"12345678\"\r\n}",
+          "raw": "{\r\n    \"name\":\"Vova\",\r\n    \"email\":\"email12222332@gmail.com\",\r\n    \"password\":\"12345678\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -40,10 +40,10 @@
           }
         },
         "url": {
-          "raw": "{{host}}:{{port}}/users",
+          "raw": "{{host}}:{{port}}/api/users",
           "host": ["{{host}}"],
           "port": "{{port}}",
-          "path": ["users"]
+          "path": ["api", "users"]
         }
       },
       "response": []
@@ -55,7 +55,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"email\":\"em@em.com\",\r\n    \"password\":\"12345678\"\r\n}",
+          "raw": "",
           "options": {
             "raw": {
               "language": "json"
@@ -63,10 +63,10 @@
           }
         },
         "url": {
-          "raw": "{{host}}:{{port}}/users/login",
+          "raw": "{{host}}:{{port}}/api/users/logout",
           "host": ["{{host}}"],
           "port": "{{port}}",
-          "path": ["users", "login"]
+          "path": ["api", "users", "logout"]
         }
       },
       "response": []
@@ -78,7 +78,7 @@
           "listen": "test",
           "script": {
             "exec": [
-              "if (pm.response.code===201){\r",
+              "if (pm.response.code===200){\r",
               "    pm.environment.set(\"authToken\", pm.response.json().token);\r",
               "}"
             ],
@@ -99,10 +99,10 @@
           }
         },
         "url": {
-          "raw": "{{host}}:{{port}}/users/login",
+          "raw": "{{host}}:{{port}}/api/users/login",
           "host": ["{{host}}"],
           "port": "{{port}}",
-          "path": ["users", "login"]
+          "path": ["api", "users", "login"]
         }
       },
       "response": []
@@ -125,10 +125,10 @@
           }
         },
         "url": {
-          "raw": "{{host}}:{{port}}/users/me",
+          "raw": "{{host}}:{{port}}/api/users/me",
           "host": ["{{host}}"],
           "port": "{{port}}",
-          "path": ["users", "me"]
+          "path": ["api", "users", "me"]
         }
       },
       "response": []
@@ -146,11 +146,7 @@
         {
           "listen": "test",
           "script": {
-            "exec": [
-              "if (pm.response.code===201){\r",
-              "    pm.environment.set(\"authToken\", pm.response.json().token);\r",
-              "}"
-            ],
+            "exec": [""],
             "type": "text/javascript"
           }
         }
@@ -160,7 +156,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"desription\":\"Igory\",\r\n    \"amount\":20,\r\n    \"type\":\"card\",\r\n    \"currency\":\"USD\"\r\n}",
+          "raw": "{\r\n    \"desription\":\"Igory\",\r\n    \"amount\":3220,\r\n    \"type\":\"card\",\r\n    \"currency\":\"USD\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -168,10 +164,10 @@
           }
         },
         "url": {
-          "raw": "{{host}}:{{port}}/expenses",
+          "raw": "{{host}}:{{port}}/api/expenses",
           "host": ["{{host}}"],
           "port": "{{port}}",
-          "path": ["expenses"]
+          "path": ["api", "expenses"]
         }
       },
       "response": []
@@ -214,10 +210,10 @@
           }
         },
         "url": {
-          "raw": "{{host}}:{{port}}/expenses",
+          "raw": "{{host}}:{{port}}/api/expenses",
           "host": ["{{host}}"],
           "port": "{{port}}",
-          "path": ["expenses"]
+          "path": ["api", "expenses"]
         }
       },
       "response": []
