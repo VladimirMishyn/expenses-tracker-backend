@@ -1,7 +1,7 @@
 import { Model, Schema, model } from 'mongoose';
 import validator from 'validator';
 import { UserDocumentInterface } from '../_entity-models/user-document.interface';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 const bcrypt = require('bcryptjs');
 
 export interface UserInterface extends UserDocumentInterface {
