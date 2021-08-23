@@ -5,7 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "test": "env-cmd -f ./environments/test.env jest --watch --runInBand",
-    "dev": "env-cmd -f ./environments/dev.env nodemon"
+    "dev": "env-cmd -f ./environments/dev.env nodemon",
+    "start": "env-cmd -f ./environments/prod.env ts-node ./src/index.ts"
   },
   "repository": {
     "type": "git",
