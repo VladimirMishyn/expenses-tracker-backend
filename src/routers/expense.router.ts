@@ -55,6 +55,7 @@ expenseRouter.get(`${EXPENSES_BASE_URL}`, auth, async (req: Request, res: Respon
         options: {
           limit: parseInt(`${req.query.limit}`),
           skip: parseInt(`${req.query.skip}`),
+          sort: { createdAt: -1 },
         },
       })
       .execPopulate();
