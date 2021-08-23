@@ -4,7 +4,12 @@
 
 Run `npm run dev` for a dev server. The app will automatically reload if you change any of the source files in `./src` directory.
 
-Application requires running instance of MongoDB running localy on port 27017. Dockering soon will be implemented
+Application requires instance of MongoDB running localy on port 27017.
+
+## Running with docker
+
+Requires Docker instaled on local machine
+Simply run `docker-compose up` and application will be accessible on 9000 port.
 
 ## Accessing with Postman
 

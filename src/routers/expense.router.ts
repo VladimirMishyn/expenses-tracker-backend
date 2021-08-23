@@ -3,7 +3,7 @@ import { auth } from '../middleware/auth';
 import { ExpenseModel } from '../models/expense.model';
 
 export const expenseRouter = Router();
-const EXPENSES_BASE_URL = '/expenses';
+const EXPENSES_BASE_URL = '/api/expenses';
 
 /** Create expense */
 expenseRouter.post(`${EXPENSES_BASE_URL}`, auth, async (req: Request, res: Response) => {
@@ -17,13 +17,30 @@ expenseRouter.post(`${EXPENSES_BASE_URL}`, auth, async (req: Request, res: Respo
 });
 
 /** Get single expense  */
-expenseRouter.get(`${EXPENSES_BASE_URL}/:id`, auth, async (req: Request, res: Response) => {});
+expenseRouter.get(`${EXPENSES_BASE_URL}/:id`, auth, async (req: Request, res: Response) => {
+  const _id = req.params.id;
+  try {
+    const expense = await ExpenseModel.findOne({ _id, owner: res.locals.user._id });
+    if (!expense) return res.status(404).send();
+    res.send(expense);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
 
 /** Update single expense  */
 expenseRouter.patch(`${EXPENSES_BASE_URL}/:id`, auth, async (req: Request, res: Response) => {});
 
 /** Delete single expense  */
-expenseRouter.delete(`${EXPENSES_BASE_URL}/:id`, auth, async (req: Request, res: Response) => {});
+expenseRouter.delete(`${EXPENSES_BASE_URL}/:id`, auth, async (req: Request, res: Response) => {
+  try {
+    const expense = await ExpenseModel.findOneAndDelete({ _id: req.params.id, owner: res.locals.user._id });
+    if (!expense) res.status(404).send();
+    res.send(expense);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
 
 /**
  * Query expenses
@@ -35,6 +52,11 @@ expenseRouter.get(`${EXPENSES_BASE_URL}`, auth, async (req: Request, res: Respon
     await res.locals.user
       .populate({
         path: 'expenses',
+        options: {
+          limit: parseInt(`${req.query.limit}`),
+          skip: parseInt(`${req.query.skip}`),
+          sort: { createdAt: -1 },
+        },
       })
       .execPopulate();
     res.send(res.locals.user.expenses);
